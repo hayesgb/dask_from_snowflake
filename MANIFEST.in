@@ -1,2 +1,3 @@
 include versioneer.py
 include read_snowflake/_version.py
+include dask_from_snowflake/_version.py

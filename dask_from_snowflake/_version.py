@@ -43,7 +43,7 @@ def get_config():
     cfg.style = "pep440"
     cfg.tag_prefix = ""
     cfg.parentdir_prefix = "dask_from_snowflake-"
-    cfg.versionfile_source = "read_snowflake/_version.py"
+    cfg.versionfile_source = "dask_from_snowflake/_version.py"
     cfg.verbose = False
     return cfg
 
