@@ -25,9 +25,17 @@ class Snowflake:
         self.password = password or os.getenv("SNOWFLAKE_USER_PASSWORD")
         self.private_key_file = private_key_file or os.getenv("SNOWFLAKE_PRIVATE_KEY_FILE")
         self.private_key_passphrase = private_key_passphrase or os.getenv("SNOWFLAKE_PRIVATE_KEY_PASSPHRASE")
-        self.make_connection_info()
+        self.connection_info = {
+                "user": self.user,
+                "role": self.role,
+                "account": self.account,
+                "warehouse": self.warehouse,
+                "database": self.database,
+                "schema": self.schema,            
+        }
+        self.get_credential()
     
-    def make_connection_info(self):
+    def get_credential(self):
     
         if all(i is not None for i in [self.private_key_file, self.private_key_passphrase]):
             from cryptography.hazmat.backends import default_backend
@@ -46,13 +54,11 @@ class Snowflake:
                 encryption_algorithm=serialization.NoEncryption()
             )
             
-            self.connection_info={
-                "user": self.user,
-                "role": self.role,
-                "account": self.account,
-                "warehouse": self.warehouse,
-                "database": self.database,
-                "schema": self.schema,
-                "private_key": pbk,
-        } 
+            self.connection_info["private_key"] = pbk
+
+        elif self.password is not None:
+            self.connection_info['password'] = self.password
+
+        else:
+            raise ValueError("No authentication information provided!")
 
