@@ -26,7 +26,7 @@ setup(
     long_description_content_type="text/markdown",
     long_description=open("README.md").read() if exists("README.md") else "",
     install_requires=[
-        "snowflake-connector-python>2.4.3",
+        "snowflake-connector-python>=2.4.3",
         "dask",
     ],
     tests_require=["pytest"],
