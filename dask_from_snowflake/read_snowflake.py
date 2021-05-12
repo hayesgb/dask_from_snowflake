@@ -9,10 +9,10 @@ from .snowflake import Snowflake
 def _get_dataframe(batch, meta):
     try:
         table = batch.create_iter(iter_unit="table")
-        df_ = list(table)[0].to_pandas()
+        df = list(table)[0].to_pandas()
         if meta:
-            df_ = df_.astype(meta)
-        return df_
+            df = df.astype(meta)
+        return df
     except Exception as e:
         pass
 
