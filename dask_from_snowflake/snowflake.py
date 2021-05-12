@@ -4,15 +4,15 @@ import os
 
 class Snowflake:
     def __init__(self,
-                 user,
-                 role,
-                 account,
-                 warehouse,
-                 database,
-                 schema,
+                 user = None,
+                 role = None,
+                 account = None,
+                 warehouse = None,
+                 database = None,
+                 schema = None,
                  password = None,
                  private_key_file = None,
-                 private_key_file_passphrase = None,
+                 private_key_passphrase = None,
                  
     ):
     
@@ -24,12 +24,12 @@ class Snowflake:
         self.schema = schema or os.getenv("SNOWFLAKE_SCHEMA")
         self.password = password or os.getenv("SNOWFLAKE_USER_PASSWORD")
         self.private_key_file = private_key_file or os.getenv("SNOWFLAKE_PRIVATE_KEY_FILE")
-        self.private_key_file_passphrase = private_key_file_passphrase or os.getenv("SNOWFLAKE_PRIVATE_KEY_FILE_PASSPHRASE")
+        self.private_key_passphrase = private_key_passphrase or os.getenv("SNOWFLAKE_PRIVATE_KEY_PASSPHRASE")
         self.make_connection_info()
     
     def make_connection_info(self):
     
-        if all(i is not None for i in [self.private_key_file, self.private_key_file_passphrase]):
+        if all(i is not None for i in [self.private_key_file, self.private_key_passphrase]):
             from cryptography.hazmat.backends import default_backend
             from cryptography.hazmat.primitives.asymmetric import rsa
             from cryptography.hazmat.primitives.asymmetric import dsa
@@ -37,7 +37,7 @@ class Snowflake:
             with open(self.private_key_file, "rb") as key:
                 p_key = serialization.load_pem_private_key(
                     key.read(),
-                    self.private_key_file_passphrase.encode(),
+                    self.private_key_passphrase.encode(),
                     backend=default_backend(),
                 )
             pbk = p_key.private_bytes(

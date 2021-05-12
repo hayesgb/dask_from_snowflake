@@ -6,7 +6,7 @@ from .snowflake import Snowflake
 
 
 @delayed
-def _get_dataframe(batch, meta = None):
+def _get_dataframe(batch, meta):
     try:
         table = batch.create_iter(iter_unit="table")
         df_ = list(table)[0].to_pandas()
@@ -18,9 +18,9 @@ def _get_dataframe(batch, meta = None):
 
 def read_snowflake(conn_info, query, meta = None):
 
-    snowflake = Snowflake(**conn_info)
+    sf = Snowflake(**conn_info)
 
-    with snowflake.connector.connect(**snowflake.connection_info) as conn:
+    with snowflake.connector.connect(**sf.connection_info) as conn:
         with conn.cursor() as cur:
             cur.execute(query)
             cur.check_can_use_arrow_resultset()
@@ -29,7 +29,7 @@ def read_snowflake(conn_info, query, meta = None):
     dfs = []
     for batch in batches:
         if batch.rowcount > 0:
-            df = _get_dataframe(batch)
+            df = _get_dataframe(batch, meta=meta)
             dfs.append(df)
     ddf = dd.from_delayed(dfs)
     return ddf
