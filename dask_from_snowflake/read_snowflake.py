@@ -3,7 +3,7 @@ from dask import delayed
 from dask.distributed import get_client
 import snowflake.connector
 
-from .snowflake import Snowflake
+from .snowflake import SnowflakeCredentials
 
 
 @delayed
@@ -36,7 +36,7 @@ def read_snowflake(conn_info: dict,
     
     """
 
-    sf = Snowflake(**conn_info)
+    sf = SnowflakeCredentials(**conn_info)
 
     with snowflake.connector.connect(**sf.connection_info) as conn:
         with conn.cursor() as cur:
