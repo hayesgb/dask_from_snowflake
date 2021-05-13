@@ -2,7 +2,7 @@
 import os
 
 
-class Snowflake:
+class SnowflakeCredentials:
     def __init__(self,
                  user = None,
                  role = None,
