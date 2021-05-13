@@ -1,9 +1,10 @@
+from dask_from_snowflake.snowflake2 import SnowflakeCredentials
 import dask.dataframe as dd
 from dask import delayed
 from dask.distributed import get_client
 import snowflake.connector
 
-from .snowflake import Snowflake
+from .snowflake2 import SnowflakeCredentials
 
 
 @delayed
@@ -36,9 +37,9 @@ def read_snowflake(conn_info: dict,
     
     """
 
-    sf = Snowflake(**conn_info)
+    creds = SnowflakeCredentials(**conn_info)
 
-    with snowflake.connector.connect(**sf.connection_info) as conn:
+    with snowflake.connector.connect(**creds) as conn:
         with conn.cursor() as cur:
             cur.execute(query)
             cur.check_can_use_arrow_resultset()
