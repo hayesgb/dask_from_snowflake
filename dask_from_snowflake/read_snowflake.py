@@ -12,6 +12,9 @@ def _get_dataframe(batch, meta: dict):
     try:
         table = batch.create_iter(iter_unit="table")
         df = list(table)[0].to_pandas()
+        if not df:
+            # handles the situation when df is None
+            raise ValueError
         if meta:
             df = df.astype(meta)
         return df
